@@ -96,49 +96,40 @@ export default function HomePage(){
 
         if(processList.processes[0].name == ""){
             alert("Nothing to process");
+            return;
         }
 
         processList.calcCompletionTime();
-
         processList.reorderProcessForFCFS();
         console.log(processList);
     }
 
     function handleSJF(e){
         e.preventDefault();
+
+        formValue.forEach(form => {
+            processList.addProcess(new Process({name: form.name, burstTime: form.bt, arrivalTime: form.at}));
+        });
+
+        if(processList.processes[0].name == ""){
+            alert("Nothing to process");
+            return;
+        }
     }
 
     function handleMLFQ(e){
         e.preventDefault();
+
+        formValue.forEach(form => {
+            processList.addProcess(new Process({name: form.name, burstTime: form.bt, arrivalTime: form.at}));
+        });
+
+        if(processList.processes[0].name == ""){
+            alert("Nothing to process");
+            return;
+        }
     }
 
-    return ( <div className='page'>
-                <button className='button add' type='button' onClick={() => addFormFields()}>Add Process</button>
-                <form onSubmit={handleSubmit}>
-                    {formValue.map((element, index) => (
-                        <div key={index}>
-                            <label>Name</label>
-                            <input type={'text'} name="name" value={element.name || ""} onChange={(e) => handleChange(index, e)} />
-
-                            <label>Arrival Time</label>
-                            <input type={'number'} name="at" value={element.at || ""} onChange={(e) => handleChange(index, e)} min={1} max={10}/>
-
-                            <label>Burst Time</label>
-                            <input type={'number'} name="bt" value={element.bt || ""} onChange={(e) => handleChange(index, e)} min={1} max={10} />
-
-                            {
-                                index ? <button type='button' className='button remove' onClick={() => removeFormFields(index)}>Remove</button>
-                                    : null
-                            }
-                        </div>
-                    ))}
-                </form>
-                
-                <div className='button_section'>
-                            <button className='button submit' type='button' onClick={handleFCFS}>Run FCFS</button>
-                            <button className='button submit' type='button' onClick={handleSJF}>Run SJF</button>
-                            <button className='button submit' type='button' onClick={handleMLFQ}>Run MLFQ</button>
-                    </div>
-            </div>
+    return ( v
             )
 } 
