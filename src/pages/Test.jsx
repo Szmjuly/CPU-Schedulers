@@ -33,7 +33,7 @@ export default function Test(){
     // Purpose: add a process field to the UI for the user to input 
     //          the process data
     function addProcessField(){
-        setProcessData([...processData, {processName: '', burstTime: 0, arrivalTime: 0}]);
+        setProcessData([...processData, {processName: '', burstTime: 0, arrivalTime: 0, completionTime: 0}]);
     }
 
     // Purpose: remove the corresponding process field based upon the index at which Remove btn was clicked
@@ -70,8 +70,10 @@ export default function Test(){
 
         // Calculating completion time
         processes[0].completionTime = parseInt(processes[0].arrivalTime, 10) + parseInt(processes[0].burstTime, 10);
-        for(let i = processes.length; i < processes.length; ++i){
-            processes[i + 1].completionTime = parseInt(processes[i].completionTime, 10) + parseInt(processes[i + 1].burstTime, 10); 
+        let index = 1;
+        for(let i = 0; i < processes.length - 1; i++){
+            processes[index].completionTime = parseInt(processes[index - 1].completionTime, 10) + parseInt(processes[index].burstTime, 10);
+            index++;
         }
 
         console.log(processes);
