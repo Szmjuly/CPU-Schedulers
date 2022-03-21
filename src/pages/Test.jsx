@@ -71,7 +71,6 @@ export default function Test(){
         // Calculating completion time
         processes[0].completionTime = parseInt(processes[0].arrivalTime, 10) + parseInt(processes[0].burstTime, 10);
         for(let i = processes.length; i < processes.length; ++i){
-
             processes[i + 1].completionTime = parseInt(processes[i].completionTime, 10) + parseInt(processes[i + 1].burstTime, 10); 
         }
 
