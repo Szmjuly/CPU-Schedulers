@@ -1,5 +1,6 @@
 import '../css/HomePage.css'
 import {useState} from 'react'
+import GanttChart from '../Components/GanttChart';
 
 function orderLeastGreatest(a, b) {
     return a.arrivalTime - b.arrivalTime;
@@ -76,7 +77,7 @@ export default function Test(){
         console.log(processes);
 
         // Clears the process list once scheduler has completed
-        processes = [];
+        // processes = [];
     }
 
     function handleMLFQ(e){
@@ -108,8 +109,7 @@ export default function Test(){
                     ))}
                 </form>
 
-                {/* Gantt Chart */}
-                {schedulerCompleted && <GanttChart />}
+                {processes && <GanttChart processes={processes}/>}
 
                 {/* Buttons to Run the Scheduling Algorithms */}
                 <div className='button_section'>

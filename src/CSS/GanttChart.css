@@ -1,0 +1,21 @@
+.chart-area{
+
+    height: 50px;
+    width: 100%;
+}
+
+.gantt-chart{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    flex: 1;
+}
+
+.process{
+    height: 25px;
+    background-color: blue;
+    color: white;
+    border: 2px solid black;
+    text-align: center;
+    padding: 5px;
+}
