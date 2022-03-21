@@ -1,5 +1,5 @@
 import '../css/HomePage.css'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 class Process{
     constructor(props){
@@ -9,10 +9,10 @@ class Process{
         this.iOTime = props.iOTime;
 
         this.stats = {
-            responseTime: null,
-            turnAroundTime: null,
-            waitingTime: null,
-            completionTime: null,
+            responseTime: 0,
+            turnAroundTime: 0,
+            waitingTime: 0,
+            completionTime: 0,
         }
     }
 }
@@ -25,6 +25,10 @@ class ProcessList{
 
     addProcess(process){
         this.processes.push(process);
+    }
+
+    removeProcess(i){
+        this.processes.splice(i, 1);
     }
 
     // Ordering the processList array by Arrival Time for FCFS Algorithm
@@ -44,23 +48,19 @@ class ProcessList{
     calcCompletionTime(){
         this.processes[0].stats.completionTime = this.processes[0].arrivalTime + this.processes[0].burstTime;
 
-        for(let i = 1; i < this.processes.length; i++){
-            this.processes[i].stats.completionTime = this.processes[i - 1].stats.completionTime + this.processes[i].burstTime;
-        }
+        this.processes[1].stats.completionTime = this.processes[0].stats.completionTime + this.processes[1].burstTime;
+        console.log(this.processes[1].stats.completionTime);
     }
 }
 
 export default function HomePage(){    
-    const [formValue, setFormValue] = useState([{name: '', bt: '', at: ''}]);
+    const [formValue, setFormValue] = useState([{name: '', bt: 0, at: 0}]);
+    const [processAmount, setProcessAmount] = useState(1);
 
     let processList = new ProcessList();
 
     function handleSubmit(e){
-        // Render the timing input display
-        e.preventDefault();
-        
-        const arr = new Array(processes);
-        
+        e.preventDefault();        
     }
 
     function handleChange(i, e){
@@ -69,14 +69,22 @@ export default function HomePage(){
         setFormValue(newFormValue);
     }
 
-    function addFormFields(){
-        setFormValue([...formValue, {name: '', bt: '', at: ''}]);
+    function handleAddOrRemoveProcess(e){
+        setProcessAmount(e.target.value);
+        
     }
+
+    function addFormFields(){
+        setFormValue([...formValue, {name: '', bt: 0, at: 0}]);
+    }
+        
+    
 
     function removeFormFields(i){
         let newFormValue = [...formValue];
         newFormValue.splice(i, 1);
         setFormValue(newFormValue);
+        processList.removeProcess(i);
     }
 
     function handleFCFS(e){
@@ -86,23 +94,26 @@ export default function HomePage(){
             processList.addProcess(new Process({name: form.name, burstTime: form.bt, arrivalTime: form.at}));
         });
 
-        processList.reorderProcessForFCFS();
-        console.log(processList);
+        if(processList.processes[0].name == ""){
+            alert("Nothing to process");
+        }
 
         processList.calcCompletionTime();
-        
-        processList.processes.forEach(process => {
-            console.log(process.completionTime);
-        });
+
+        processList.reorderProcessForFCFS();
+        console.log(processList);
+    }
+
+    function handleSJF(e){
+        e.preventDefault();
+    }
+
+    function handleMLFQ(e){
+        e.preventDefault();
     }
 
     return ( <div className='page'>
-                {/* <form onSubmit={handleSubmit}>
-                    <input value={processes} type={'number'} id={'processAmount'} onChange={(e) => setProcesses(e.target.value)} max={10} min={1}/>
-                </form>
-
-                <button onClick={handleFCFS}>FCFS</button> */}
-
+                <button className='button add' type='button' onClick={() => addFormFields()}>Add Process</button>
                 <form onSubmit={handleSubmit}>
                     {formValue.map((element, index) => (
                         <div key={index}>
@@ -121,13 +132,13 @@ export default function HomePage(){
                             }
                         </div>
                     ))}
-
-                    <div className='button_section'>
-                            <button className='button add' type='button' onClick={() => addFormFields()}>Add Process</button>
-                            <button className='button submit' type='button' onClick={handleFCFS}>FCFS</button>
-                    </div>
                 </form>
-
+                
+                <div className='button_section'>
+                            <button className='button submit' type='button' onClick={handleFCFS}>Run FCFS</button>
+                            <button className='button submit' type='button' onClick={handleSJF}>Run SJF</button>
+                            <button className='button submit' type='button' onClick={handleMLFQ}>Run MLFQ</button>
+                    </div>
             </div>
             )
 } 
