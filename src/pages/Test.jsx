@@ -14,6 +14,13 @@ function calcCompletionTime(processes){
     }
 }
 
+function calcTurnAroundWaitingTime(processes){
+    for(let i in processes){
+        processes[i].turnAroundTime = Math.abs(parseInt(processes[i].completionTime, 10) - parseInt(processes[i].arrivalTime, 10));
+        processes[i].waitingTime = Math.abs(parseInt(processes[i].turnAroundTime, 10) - parseInt(processes[i].burstTime, 10));
+    }
+}
+
 export default function Test(){
     // Setting up a dummy state processData for initialization purposes
     const [processData, setProcessData] = useState([{processName: '', burstTime: 0, arrivalTime: 0, waitingTime: 0, completionTime: 0, turnAroundTime: 0}]);
@@ -62,13 +69,8 @@ export default function Test(){
         // Calculating completion time
         calcCompletionTime(processes);
 
-        let index2 = 1;
         // Calculating turnaround time and waiting time
-        for(let i = 0; i < processes.length - 1; i++){
-            processes[index2].turnAroundTime = parseInt(processes[index2].completionTime, 10) - parseInt(processes[index2].arrivalTime, 10);
-            processes[index2].waitingTime = parseInt(processes[index2].turnAroundTime, 10) - parseInt(processes[index2].burstTime, 10);
-            index2++;
-        }
+        calcTurnAroundWaitingTime(processes);
 
         console.log(processes);
 
