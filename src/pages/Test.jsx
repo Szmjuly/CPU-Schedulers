@@ -22,6 +22,7 @@ function calcTurnAroundWaitingTime(processes){
 }
 
 export default function Test(){
+    const [schedulerCompleted, setSchedulerCompleted] = useState(false);
     // Setting up a dummy state processData for initialization purposes
     const [processData, setProcessData] = useState([{processName: '', burstTime: 0, arrivalTime: 0, waitingTime: 0, completionTime: 0, turnAroundTime: 0}]);
     
@@ -107,11 +108,14 @@ export default function Test(){
                     ))}
                 </form>
 
+                {/* Gantt Chart */}
+                {schedulerCompleted && <GanttChart />}
+
                 {/* Buttons to Run the Scheduling Algorithms */}
                 <div className='button_section'>
                             <button className='run-scheduler' type='button' onClick={handleFCFS}>Run FCFS</button>
                             <button className='run-scheduler' type='button' onClick={handleMLFQ}>Run MLFQ</button>
-                    </div>
+                </div>
             </div>
     )
 } 
