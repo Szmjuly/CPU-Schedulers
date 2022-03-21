@@ -1,31 +1,22 @@
 import '../css/HomePage.css'
 import {useState} from 'react'
 
-class CPUScheduler{
-    constructor(){
-        this.processes = [];
-        this.timeLine  = [];
-        this.timeQuantum  = null;
-
-        this.processAmount = 0;
-    }
-}
-
-class FirstComeFirstServe extends CPUScheduler{
-    constructor(){
-        super();
-
-        this.init();
-    }
-}
-
 function orderLeastGreatest(a, b) {
     return a.arrivalTime - b.arrivalTime;
   }
 
+function calcCompletionTime(processes){
+    processes[0].completionTime = parseInt(processes[0].arrivalTime, 10) + parseInt(processes[0].burstTime, 10);
+    let index = 1;
+    for(let i = 0; i < processes.length - 1; i++){
+        processes[index].completionTime = parseInt(processes[index - 1].completionTime, 10) + parseInt(processes[index].burstTime, 10);
+        index++;
+    }
+}
+
 export default function Test(){
     // Setting up a dummy state processData for initialization purposes
-    const [processData, setProcessData] = useState([{processName: '', burstTime: 0, arrivalTime: 0, completionTime: 0}]);
+    const [processData, setProcessData] = useState([{processName: '', burstTime: 0, arrivalTime: 0, waitingTime: 0, completionTime: 0, turnAroundTime: 0}]);
     
     // Initializing the empty processes array to be processes by a scheduler
     let processes = [];
@@ -33,7 +24,7 @@ export default function Test(){
     // Purpose: add a process field to the UI for the user to input 
     //          the process data
     function addProcessField(){
-        setProcessData([...processData, {processName: '', burstTime: 0, arrivalTime: 0, completionTime: 0}]);
+        setProcessData([...processData, {processName: '', burstTime: 0, arrivalTime: 0, waitingTime: 0, completionTime: 0, turnAroundTime: 0}]);
     }
 
     // Purpose: remove the corresponding process field based upon the index at which Remove btn was clicked
@@ -69,11 +60,14 @@ export default function Test(){
         processes.sort(orderLeastGreatest); // Sorting the string by calling the compare function that compares the objects arrival times
 
         // Calculating completion time
-        processes[0].completionTime = parseInt(processes[0].arrivalTime, 10) + parseInt(processes[0].burstTime, 10);
-        let index = 1;
+        calcCompletionTime(processes);
+
+        let index2 = 1;
+        // Calculating turnaround time and waiting time
         for(let i = 0; i < processes.length - 1; i++){
-            processes[index].completionTime = parseInt(processes[index - 1].completionTime, 10) + parseInt(processes[index].burstTime, 10);
-            index++;
+            processes[index2].turnAroundTime = parseInt(processes[index2].completionTime, 10) - parseInt(processes[index2].arrivalTime, 10);
+            processes[index2].waitingTime = parseInt(processes[index2].turnAroundTime, 10) - parseInt(processes[index2].burstTime, 10);
+            index2++;
         }
 
         console.log(processes);
